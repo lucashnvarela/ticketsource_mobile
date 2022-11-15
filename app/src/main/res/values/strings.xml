@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">ticketsource</string>
+
+    <!-- Login Fragment -->
+    <string name="login_tvTitulo">Login</string>
+    <string name="login_tvUsername">Nome de utilizador</string>
+    <string name="login_tvPassword">Palavra-passe</string>
+    <string name="login_btnLogin">Iniciar Sessão</string>
+    <string name="login_tvSignupText">Não tem uma conta?</string>
+    <string name="login_btnSignup">Registe-se</string>
+
+    <!-- Signup Fragment -->
+    <string name="signup_tvTitulo">Signup</string>
+    <string name="signup_tvUsername">Nome de utilizador</string>
+    <string name="signup_tvEmail">Email</string>
+    <string name="signup_tvPassword">Palavra-passe</string>
+    <string name="signup_btnSignup">Registar</string>
+
+    <!-- Favorito Item Lista -->
+    <string name="itemFavorito_tvLabelEvento">Evento :</string>
+    <string name="itemFavorito_tvLabelLocalizacao">Localização :</string>
+    <string name="itemFavorito_tvLabelTipo">Tipo :</string>
+
+    <!-- Evento Item Lista -->
+    <string name="itemEvento_tvLabelEvento">Evento :</string>
+    <string name="itemEvento_tvLabelLocalizacao">Localização :</string>
+    <string name="itemEvento_tvLabelTipo">Tipo :</string>
+
+    <!-- Evento Detalhes -->
+    <string name="detalhesEvento_tvLabelEvento">Evento :</string>
+    <string name="detalhesEvento_tvLabelLocalizacao">Localização :</string>
+    <string name="detalhesEvento_tvLabelTipo">Tipo :</string>
+    <string name="detalhesEvento_tvLabelDescricao">Descrição :</string>
+    <string name="detalhesEvento_tvLabelLugares">Lugares disponíveis :</string>
 </resources>
