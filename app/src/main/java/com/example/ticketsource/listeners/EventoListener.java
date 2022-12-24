@@ -5,11 +5,5 @@ import java.util.ArrayList;
 import com.example.ticketsource.models.Evento;
 
 public interface EventoListener {
-
-        void onRefreshListaEventos (ArrayList<Evento> listaEventos);
-
-        void onRefreshInfo();
-
-        void onLoadInfo(Evento evento);
-
+	void onRefreshListaEventos(ArrayList<Evento> listaEventos);
 }

@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginVertical="20dp"
-                    app:backgroundTint="@android:color/holo_green_light"
+                    app:backgroundTint="@color/green_medium"
                     android:paddingHorizontal="40dp"
                     android:text="@string/signup_btnSignup"
                     android:textSize="20sp" />

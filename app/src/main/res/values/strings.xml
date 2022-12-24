@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">ticketsource</string>
+    <string name="ndOpen">Open</string>
+    <string name="ndClose">Close</string>
+
+    <!-- Main Drawer -->
+    <string name="drawer_tvGestor">Scan Bilhete</string>
+    <string name="drawer_tvEventos">Eventos</string>
+    <string name="drawer_tvFavoritos">Favoritos</string>
+    <string name="drawer_tvBilhetes">Meus Bilhetes</string>
+    <string name="drawer_tvLogout">Terminar Sessão</string>
+    <string name="drawer_tvLogin">Login</string>
 
     <!-- Login Fragment -->
     <string name="login_tvTitulo">Login</string>
@@ -17,19 +27,28 @@
     <string name="signup_btnSignup">Registar</string>
 
     <!-- Favorito Item Lista -->
-    <string name="itemFavorito_tvLabelEvento">Evento :</string>
-    <string name="itemFavorito_tvLabelLocalizacao">Localização :</string>
-    <string name="itemFavorito_tvLabelTipo">Tipo :</string>
+    <string name="itemFavorito_tvLabelTitulo">Evento :</string>
+    <string name="itemFavorito_tvLabelCategoria">Categoria :</string>
 
     <!-- Evento Item Lista -->
-    <string name="itemEvento_tvLabelEvento">Evento :</string>
-    <string name="itemEvento_tvLabelLocalizacao">Localização :</string>
-    <string name="itemEvento_tvLabelTipo">Tipo :</string>
+    <string name="itemEvento_tvLabelTitulo">Evento :</string>
+    <string name="itemEvento_tvLabelCategoria">Categoria :</string>
 
     <!-- Evento Detalhes -->
-    <string name="detalhesEvento_tvLabelEvento">Evento :</string>
-    <string name="detalhesEvento_tvLabelLocalizacao">Localização :</string>
-    <string name="detalhesEvento_tvLabelTipo">Tipo :</string>
+    <string name="detalhesEvento_tvLabelTitulo">Evento :</string>
+    <string name="detalhesEvento_tvLabelCategoria">Categoria :</string>
     <string name="detalhesEvento_tvLabelDescricao">Descrição :</string>
-    <string name="detalhesEvento_tvLabelLugares">Lugares disponíveis :</string>
+
+    <!-- Bilhete Item Lista -->
+    <string name="itemBilhete_tvLabelUid">UID :</string>
+    <string name="itemBilhete_tvLabelLugar">Número do Lugar :</string>
+    <string name="itemBilhete_tvLabelDisponivel">Disponível :</string>
+
+    <!-- Bilhete Detalhes -->
+    <string name="detalhesBilhete_tvLabelUid">UID :</string>
+    <string name="detalhesBilhete_tvLabelLugar">Número do Lugar :</string>
+    <string name="detalhesBilhete_tvLabelDisponivel">Disponível :</string>
+    <string name="detalhesBilhete_tvLabelStatus">Status :</string>
+    <string name="detalhesBilhete_btnCancelar">Cancelar bilhete</string>
+    <string name="detalhesBilhete_btnCheckin">Check-in</string>
 </resources>

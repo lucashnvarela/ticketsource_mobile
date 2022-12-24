@@ -6,11 +6,11 @@ import com.example.ticketsource.models.Evento;
 
 public interface FavoritoListener {
 
-    void onAddEventosFavoritos();
+	void onAddFavorito();
 
-    void onDeleteEventosFavoritos();
+	void onDeleteFavorito();
 
-    void oncheckEventoFavorito(Boolean favorito);
+	void onCheckFavorito(Boolean isFavorito);
 
-    void onRefreshListaFavoritosEventos(ArrayList<Evento> eventos);
+	void onRefreshListaFavoritos(ArrayList<Evento> eventos);
 }

@@ -6,7 +6,7 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import amsi.dei.estg.ipleiria.projetoevc.R;
+import com.example.ticketsource.R;
 
 public class SplashActivity extends AppCompatActivity {
 

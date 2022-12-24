@@ -4,6 +4,7 @@ package com.example.ticketsource.views;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.service.quicksettings.Tile;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,10 +96,15 @@ public class LoginFragment extends Fragment implements UserListener {
     public void onValidateLogin(String token, String username) {
         if(token != null){
             guardarInfoSharedPref(token, username);
-            Fragment fragment = new MainFragment();
+            Fragment fragment = new ListaEventoFragment();
             fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).addToBackStack(null).commit();
             Toast.makeText(getContext(), "Bem Vindo", Toast.LENGTH_LONG).show();
         } else Toast.makeText(getContext(), "Login Inválido", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onCheckRole(Boolean isCliente) {
+
     }
 
     @Override

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_eventos"
+            android:icon="@drawable/eventos"
+            android:title="@string/drawer_tvEventos" />
+
+        <item
+            android:id="@+id/nav_favoritos"
+            android:icon="@drawable/fav"
+            android:title="@string/drawer_tvFavoritos" />
+
+        <item
+            android:id="@+id/nav_bilhetes"
+            android:icon="@drawable/ticket"
+            android:title="@string/drawer_tvBilhetes" />
+
+    </group>
+
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/user"
+        android:title="@string/drawer_tvLogout" />
+</menu>

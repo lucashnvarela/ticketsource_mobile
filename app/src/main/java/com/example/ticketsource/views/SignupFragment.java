@@ -32,7 +32,7 @@ public class SignupFragment extends Fragment implements UserListener {
     Button btnSignup;
     public UserListener userListener;
 
-    private User utilizador;
+    private User user;
     private Pattern pattern;
     private Matcher matcher;
     private FragmentManager fragmentManager;
@@ -68,7 +68,7 @@ public class SignupFragment extends Fragment implements UserListener {
                     String mPassword = etPassword.getText().toString();
 
                     if (!isUsernameValid(mUsername)) {
-                        etUsername.setError("Nome de utilizador inválido");
+                        etUsername.setError("Nome de user inválido");
                         return;
                     }
 
@@ -82,8 +82,8 @@ public class SignupFragment extends Fragment implements UserListener {
                         return;
                     }
 
-                    utilizador = new User(mUsername, mEmail, mPassword);
-                    SingletonTicketsource.getInstance(getContext()).registarUserAPI(utilizador, getContext());
+                    user = new User(mUsername, mEmail, mPassword);
+                    SingletonTicketsource.getInstance(getContext()).signupUserAPI(user, getContext());
 
                 } else Toast.makeText(getContext(), "Sem ligação à Internet", Toast.LENGTH_LONG).show();
             }
@@ -121,6 +121,11 @@ public class SignupFragment extends Fragment implements UserListener {
 
     @Override
     public void onValidateLogin(String token, String username) {
+
+    }
+
+    @Override
+    public void onCheckRole(Boolean isCliente) {
 
     }
 

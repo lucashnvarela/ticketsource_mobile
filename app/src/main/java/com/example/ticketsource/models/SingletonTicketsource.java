@@ -20,388 +20,375 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.example.ticketsource.listeners.FavoritoListener;
-import com.example.ticketsource.listeners.EventosListener;
+import com.example.ticketsource.listeners.EventoListener;
+import com.example.ticketsource.listeners.BilheteListener;
 import com.example.ticketsource.listeners.UserListener;
 import com.example.ticketsource.utils.EventoJsonParser;
-import com.example.ticketsource.utils.UtilizadoresParserJson;
+import com.example.ticketsource.utils.BilheteJsonParser;
+import com.example.ticketsource.utils.UserJsonParser;
 
 public class SingletonTicketsource {
+	private static final String localhost = "http://192.168.1.73:8080";
+	private static final int ADICIONAR_BD = 1;
+	private static final int REMOVER_BD = 3;
 
-    private static final int ADICIONAR_BD = 1;
+	private static SingletonTicketsource instance = null;
+	private User user;
+	private Evento evento;
+	private ArrayList<Evento> eventos;
+	private ArrayList<Bilhete> bilhetes;
+	private FavoritoDBHelper favoritoBD;
+	private static RequestQueue volleyQueue = null; //static para ser fila unica
 
-    private static final int REMOVER_BD = 3;
+	//API
+	//User
+	private static final String mUrlAPIRegistarUser = localhost + "/v1/user/registo";
+	private static final String mUrlAPILoginUser = localhost + "/v1/user/login";
+	private static final String mUrlAPIUserCheckRole = localhost + "/v1/user/check/";
 
-    private static SingletonTicketsource instance = null;
-    private User utilizador;
-    private ArrayList<Evento> eventos;
-    private Evento evento;
-    private EventosFavoritosDBHelper eventosFavoritosBD;
-    private static RequestQueue volleyQueue = null; //static para ser fila unica
-    private static final String mUrlAPIRegistarUser = "http://192.168.1.77:8080/v1/user/registo";
-    private static final String mUrlAPIUserLogin = "http://192.168.1.77:8080/v1/user/login";
-    private static final String mUrlAPIEditarRegistoUser = "http://192.168.1.77:8080/v1/user/editar";
-    private static final String mUrlAPIApagarUser = "http://192.168.1.77:8080/v1/user/apagar";
-    private static final String mUrlAPIUserDetalhes = "http://192.168.1.77:8080/v1/user/detalhes";
-    private static final String mUrlAPIEventos = "http://192.168.1.77:8080/v1/evento/all";
-    private static final String mUrlAPIEventoPesquisa = "http://192.168.1.77:8080/v1/evento/pesquisa";
-    private static final String mUrlAPIEventosFavoritos = "http://192.168.1.77:8080/v1/favorito/info";
-    private static final String mUrlAPIEventosFavoritosAdicionar = "http://192.168.1.77:8080/v1/favorito/add";
-    private static final String mUrlAPIEventosFavoritosEliminar = "http://192.168.1.77:8080/v1/favorito/delete";
-    private static final String mUrlAPIEventosFavoritosCheck = "http://192.168.1.77:8080/v1/favorito/check";
+	//Evento
+	private static final String mUrlAPIEventos = localhost + "/v1/evento/lista";
 
-    private UserListener userListener;
-    protected EventosListener eventosListener;
-    public FavoritoListener favoritoListener;
+	//Bilhete
+	private static final String mUrlAPIBilhetes = localhost + "/v1/bilhete/lista/";
+	private static final String mUrlAPIBilheteCancelar = localhost + "/v1/bilhete/cancelar/";
+	private static final String mUrlAPIBilheteCheckin = localhost + "/v1/bilhete/checkin/";
 
-    public static synchronized SingletonTicketsource getInstance(Context context) {
-        if (instance == null) {
-            instance = new SingletonTicketsource(context);
-            volleyQueue = Volley.newRequestQueue(context); //Cria apenas uma fila de pedidos
-        }
-        return instance;
-    }
+	//Favorito
+	private static final String mUrlAPIFavoritos = localhost + "/v1/favorito/lista/";
+	private static final String mUrlAPIFavoritoAdd = localhost + "/v1/favorito/adicionar/";
+	private static final String mUrlAPIFavoritoDelete = localhost + "/v1/favorito/remover/";
+	private static final String mUrlAPIFavoritoCheck = localhost + "/v1/favorito/check/";
 
-    private SingletonTicketsource(Context context) {
-        eventos = new ArrayList<>();
-        eventosFavoritosBD = new EventosFavoritosDBHelper(context);
+	private UserListener userListener;
+	protected EventoListener eventoListener;
+	protected BilheteListener bilheteListener;
+	public FavoritoListener favoritoListener;
 
-    }
+	public static synchronized SingletonTicketsource getInstance(Context context) {
+		if (instance == null) {
+			instance = new SingletonTicketsource(context);
+			volleyQueue = Volley.newRequestQueue(context);
+		}
 
-    public void setFavoritosListener(FavoritoListener favoritosListener){
-        this.favoritoListener = favoritosListener;
-    }
+		return instance;
+	}
 
-    public void setUserListener(UserListener userListener) {
-        this.userListener = userListener;
-    }
+	private SingletonTicketsource(Context context) {
+		eventos = new ArrayList<>();
+		bilhetes = new ArrayList<>();
+		favoritoBD = new FavoritoDBHelper(context);
+	}
 
-    public void setEventosListener(EventoListener eventosListener) {
-        this.eventoListener = eventosListener;
-    }
+	public void setFavoritoListener(FavoritoListener favoritoListener) {
+		this.favoritoListener = favoritoListener;
+	}
 
-    public Evento getEvento(int id){
-        for(Evento p: eventos){
-            if(p.getId() == id){
-                return p;
-            }
-        }
-        return null;
-    }
+	public void setUserListener(UserListener userListener) {
+		this.userListener = userListener;
+	}
 
-    /*********** Metodos para aceder a BD local ************/
+	public void setEventoListener(EventoListener eventoListener) {
+		this.eventoListener = eventoListener;
+	}
 
-    public ArrayList<Evento> getEventosFavoritosDB() {
-        eventos = eventosFavoritosBD.getAllEventosFavoritosBD();
+	public void setBilheteListener(BilheteListener bilheteListener) {
+		this.bilheteListener = bilheteListener;
+	}
 
-        return eventos;
-    }
+	public Evento getEvento(int id) {
+		for (Evento p : eventos) {
+			if (p.getId() == id) return p;
+		}
+		return null;
+	}
 
-    public void addEventoFavoritoBD(Evento eventoFavorito){
-        eventosFavoritosBD.addEventoFavoritoBD(eventoFavorito);
-    }
+	public Bilhete getBilhete(int id) {
+		for (Bilhete p : bilhetes) {
+			if (p.getId() == id) return p;
+		}
+		return null;
+	}
 
-    public void addEventosFavoritosBD(ArrayList<Evento> eventos){
-        eventosFavoritosBD.deleteAlleventosFavoritosBD();
-        for(Evento p : eventos)
-            addEventoFavoritoBD(p);
-    }
+	/**
+	 * Metodos para aceder a BD local
+	 */
 
+	public ArrayList<Evento> getFavoritosDB() {
+		eventos = favoritoBD.getAllFavoritosBD();
 
-    public void deleteEventoFavoritoBD(int codigo_evento){
-        Evento evento = getEvento(codigo_evento);
-        if(evento!=null){
-            if (eventosFavoritosBD.deleteEventoFavoritoBD(codigo_evento)){
-                eventos.remove(codigo_evento);
-            }
-        }
-    }
+		return eventos;
+	}
 
-    public static boolean isConnectedInternet(Context context){
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+	public void addFavoritoBD(Evento evento) {
+		favoritoBD.addFavoritoBD(evento);
+	}
 
-        return networkInfo != null && networkInfo.isConnected();
-    }
-
-    /********* Métodos de acesso à API - Utilizador****/
-    /**
-     * Registar User API
-     */
-
-    public void signupUserAPI(final User utilizador, final Context context) {
-        StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIRegistarUser, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                if (userListener != null) {
-                    userListener.onUserSignup(response);
-                }
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("username", utilizador.getUsername());
-                params.put("email", utilizador.getEmail());
-                params.put("password", utilizador.getPassword());
-
-                return params;
-            }
-        };
-        volleyQueue.add(req);
-    }
-
-    public void getUserAPI(final Context context, String token) {
-
-            StringRequest req = new StringRequest(Request.Method.GET, mUrlAPIUserDetalhes + "/" + token, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    utilizador = UserParserJson.parserJsonUtilizador(response);
-
-                    if (userListener != null)
-                        userListener.onLoadEditarRegisto(utilizador);
-
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            volleyQueue.add(req);
-    }
+	public void addFavoritosBD(ArrayList<Evento> eventos) {
+		favoritoBD.deleteAllFavoritosBD();
+		for (Evento p : eventos) addFavoritoBD(p);
+	}
 
 
-    public void editarUtilizadorAPI(final Utilizador utilizador, final Context context, final String username) {
-        StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPIEditarRegistoUser + "/" + username, new Response.Listener<String>() {
+	public void deleteFavoritoBD(int id) {
+		Evento evento = getEvento(id);
+		if (evento != null) if (favoritoBD.deleteFavoritoBD(id)) eventos.remove(id);
+	}
 
-            public void onResponse(String response) {
-                if (userListener != null) {
-                    userListener.onRefreshDetalhes(response);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("username", utilizador.getUsername());
-                params.put("email", utilizador.getEmail());
-                return params;
-            }
-        };
-        volleyQueue.add(req);
-    }
+	public static boolean isConnectedInternet(Context context) {
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 
-    public void loginUserAPI(final String username, final String password, final Context context) {
-        StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIUserLogin, new Response.Listener<String>() {
+		return networkInfo != null && networkInfo.isConnected();
+	}
 
-            public void onResponse(String response) {
-                String token = UtilizadoresParserJson.parserJsonLogin(response);
-                if (userListener != null) {
-                    userListener.onValidateLogin(token, username);
-                }
-            }
-        }, new Response.ErrorListener() {
+	/**
+	 * Métodos de acesso à API - User
+	 */
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (userListener != null) {
-                    userListener.onErroLogin();
-                }
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", username);
-                params.put("password", password);
-                return params;
-            }
-        };
-        volleyQueue.add(req);
-    }
+	public void signupUserAPI(final User user, final Context applicationContext) {
+		StringRequest request = new StringRequest(Request.Method.POST, mUrlAPIRegistarUser, new Response.Listener<String>() {
 
+			@Override
+			public void onResponse(String response) {
+				if (userListener != null) userListener.onUserSignup(response);
+			}
+		}, new Response.ErrorListener() {
 
-    public void apagarContaAPI(String username, final Context context) {
-        StringRequest req = new StringRequest(Request.Method.PATCH, mUrlAPIApagarUser + "/" + username, new Response.Listener<String>() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Toast.makeText(applicationContext, error.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		}) {
+			@Override
+			protected Map<String, String> getParams() {
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("username", user.getUsername());
+				params.put("email", user.getEmail());
+				params.put("password", user.getPassword());
 
-            public void onResponse(String response) {
-                if (userListener != null) {
-                    userListener.onDeleteUser(response);
-                }
-            }
-        }, new Response.ErrorListener() {
+				return params;
+			}
+		};
+		volleyQueue.add(request);
+	}
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        volleyQueue.add(req);
-    }
+	public void loginUserAPI(final String username, final String password, final Context applicationContext) {
+		StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILoginUser, new Response.Listener<String>() {
 
-    public void getAllEventosAPI(final Context context) {
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIEventos, null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                eventos = EventoJsonParser.parserJsonEventos(response);
+			public void onResponse(String response) {
+				String token = UserJsonParser.parserJsonLogin(response);
+				if (userListener != null) userListener.onValidateLogin(token, username);
+			}
+		}, new Response.ErrorListener() {
 
-                if(eventosListener != null) eventosListener.onRefreshListaEventos(eventos);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-        volleyQueue.add(request);
-    }
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				if (userListener != null) userListener.onErroLogin();
+			}
+		}) {
+			@Override
+			protected Map<String, String> getParams() {
+				Map<String, String> params = new HashMap<>();
+				params.put("username", username);
+				params.put("password", password);
+				return params;
+			}
+		};
+		volleyQueue.add(request);
+	}
 
-    public void getEventoPesquisa(String pesquisa, final Context context) {
-        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIEventoPesquisa + "/" + pesquisa, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                evento = EventoJsonParser.parserJsonEvento(response);
+	public void checkRoleAPI(final Context applicationContext, String token) {
+		StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIUserCheckRole + token, new Response.Listener<String>() {
 
-                if(eventosListener != null) {
-                    eventosListener.onRefreshListaEventos(eventos);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-        volleyQueue.add(request);
-    }
+			@Override
+			public void onResponse(String response) {
+				boolean isCliente = response.equals("true");
 
-    /********* Métodos de acesso à API - Favoritos****/
-    /**
-     *
-     */
+				if (userListener != null) userListener.onCheckRole(isCliente);
+			}
+		}, new Response.ErrorListener() {
 
-    public void getAllEventosFavoritosAPI(final Context context, String token) {
-        if(!isConnectedInternet(context)){
-            Toast.makeText(context, "Não tem ligação à internet!", Toast.LENGTH_SHORT).show();
-            addeventosFavoritosBD(eventos);
-            if (favoritoListener != null) {
-                favoritoListener.onRefreshListaFavoritosEventos(eventos);
-            }
-        }else {
-            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIEventosFavoritos + "/" + token, null, new Response.Listener<JSONArray>() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Toast.makeText(applicationContext, error.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
 
-                @Override
-                public void onResponse(JSONArray response) {
-                    eventos = EventoJsonParser.parserJsonEventos(response);
-                    addeventosFavoritosBD(eventos);
-                    if (favoritoListener != null) {
-                        favoritoListener.onRefreshListaFavoritosEventos(eventos);
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, "Não tem nenhum evento adicionado aos favoritos!", Toast.LENGTH_SHORT).show();
-                }
-            });
-            volleyQueue.add(req);
-        }
-    }
+		volleyQueue.add(request);
+	}
 
-    public void addEventoFavoritoAPI(final Context context, final Evento evento, final String token) {
-        StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIEventosFavoritosAdicionar + "/" + token, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                addEventoFavoritoBD(evento);
-                if (favoritoListener != null) {
-                    favoritoListener.onAddEventosFavoritos();
-                }
+	/**
+	 * Métodos de acesso à API - Evento
+	 */
 
-            }
-        }, new Response.ErrorListener() {
+	public void getAllEventosAPI(final Context applicationContext) {
+		JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIEventos, null, new Response.Listener<JSONArray>() {
+			@Override
+			public void onResponse(JSONArray response) {
+				eventos = EventoJsonParser.parserJsonEvento(response);
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("codigo_evento", evento.getCodigo_evento() + "");
-                params.put("token", token);
-                    /*
-                    JSONObject param = new JSONObject(params);
-                    Log.e("MAP:", param+"");*/
+				if (eventoListener != null) eventoListener.onRefreshListaEventos(eventos);
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Toast.makeText(applicationContext, error.getMessage(), Toast.LENGTH_LONG).show();
+			}
+		});
+		volleyQueue.add(request);
+	}
 
-                return params;
-            }
-        };
-        volleyQueue.add(req);
-    }
+	/**
+	 * Métodos de acesso à API - Favoritos
+	 */
 
-    public void deleteEventoFavoritoAPI(final Context applicationContext, Evento evento, String token) {
+	public void getAllFavoritosAPI(final Context applicationContext, String token) {
+		if (!isConnectedInternet(applicationContext)) {
+			Toast.makeText(applicationContext, "Não tem ligação à internet", Toast.LENGTH_SHORT).show();
+			addFavoritosBD(eventos);
 
-        StringRequest req = new StringRequest(Request.Method.DELETE, mUrlAPIEventosFavoritosEliminar + "/" + evento.getCodigo_evento() + "/" + token, new Response.Listener<String>() {
+			if (favoritoListener != null) favoritoListener.onRefreshListaFavoritos(eventos);
 
-            @Override
-            public void onResponse(String response) {
-                if (favoritoListener != null) {
-                    favoritoListener.onDeleteEventosFavoritos();
-                }
+		} else {
+			JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIFavoritos + token, null, new Response.Listener<JSONArray>() {
 
-            }
-        }, new Response.ErrorListener() {
+				@Override
+				public void onResponse(JSONArray response) {
+					eventos = EventoJsonParser.parserJsonEvento(response);
+					addFavoritosBD(eventos);
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(applicationContext, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        volleyQueue.add(req);
-    }
+					if (favoritoListener != null) favoritoListener.onRefreshListaFavoritos(eventos);
+				}
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					Toast.makeText(applicationContext, "Não tem nenhum evento adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+				}
+			});
+			volleyQueue.add(request);
+		}
+	}
 
-    public void checkFavoritoAPI(final Context applicationContext, final Evento evento, String token) {
-        StringRequest req = new StringRequest(Request.Method.GET, mUrlAPIEventosFavoritosCheck + "/" + evento.getId() + "/" + token, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                boolean favorito = response.equals("true") ? true : false;
+	public void addFavoritoAPI(final Context applicationContext, final Evento evento, final String token) {
+		StringRequest request = new StringRequest(Request.Method.POST, mUrlAPIFavoritoAdd + evento.getId() + "/" + token, new Response.Listener<String>() {
+			@Override
+			public void onResponse(String response) {
+				addFavoritoBD(evento);
+				if (favoritoListener != null) favoritoListener.onAddFavorito();
 
-                if (favoritoListener != null)
-                    favoritoListener.oncheckEventoFavorito(favorito);
+			}
+		}, new Response.ErrorListener() {
 
-            }
-        }, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Toast.makeText(applicationContext, error.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
+		volleyQueue.add(request);
+	}
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(applicationContext, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        volleyQueue.add(req);
-    }
+	public void deleteFavoritoAPI(final Context applicationContext, Evento evento, String token) {
 
-    public void OnUpdateListaFavoritosBD(Evento evento, int operacao) {
-        switch (operacao) {
-            case ADICIONAR_BD:
-                addEventoFavoritoBD(evento);
-                break;
-            case REMOVER_BD:
-                deleteEventoFavoritoBD(evento.getId());
-                break;
-        }
-    }
+		StringRequest request = new StringRequest(Request.Method.DELETE, mUrlAPIFavoritoDelete + evento.getId() + "/" + token, new Response.Listener<String>() {
+
+			@Override
+			public void onResponse(String response) {
+				if (favoritoListener != null) favoritoListener.onDeleteFavorito();
+			}
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Toast.makeText(applicationContext, error.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
+		volleyQueue.add(request);
+	}
+
+	public void checkFavoritoAPI(final Context applicationContext, final Evento evento, String token) {
+		StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFavoritoCheck + evento.getId() + "/" + token, new Response.Listener<String>() {
+
+			@Override
+			public void onResponse(String response) {
+				boolean isFavorito = response.equals("true");
+
+				if (favoritoListener != null) favoritoListener.onCheckFavorito(isFavorito);
+
+			}
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Toast.makeText(applicationContext, error.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
+		volleyQueue.add(request);
+	}
+
+	public void onUpdateListaFavoritosBD(Evento evento, int opc) {
+		switch (opc) {
+			case ADICIONAR_BD:
+				addFavoritoBD(evento);
+				break;
+			case REMOVER_BD:
+				deleteFavoritoBD(evento.getId());
+				break;
+		}
+	}
+
+	/**
+	 * Métodos de acesso à API - Bilhete
+	 */
+
+	public void getAllBilhetesAPI(final Context applicationContext, String token) {
+		JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIBilhetes + token, null, new Response.Listener<JSONArray>() {
+			@Override
+			public void onResponse(JSONArray response) {
+				bilhetes = BilheteJsonParser.parserJsonBilhete(response);
+
+				if (bilheteListener != null) bilheteListener.onRefreshListaBilhetes(bilhetes);
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Toast.makeText(applicationContext, error.getMessage(), Toast.LENGTH_LONG).show();
+			}
+		});
+		volleyQueue.add(request);
+	}
+
+	public void cancelarBilheteAPI(final Context applicationContext, final Bilhete bilhete, String token) {
+		StringRequest request = new StringRequest(Request.Method.DELETE, mUrlAPIBilheteCancelar + bilhete.getId() + "/" + token, new Response.Listener<String>() {
+
+			@Override
+			public void onResponse(String response) {
+				if (bilheteListener != null) bilheteListener.onCancelarBilhete();
+			}
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Toast.makeText(applicationContext, error.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
+		volleyQueue.add(request);
+	}
+
+	public void checkinBilheteAPI(final Context applicationContext, final Bilhete bilhete) {
+		StringRequest request = new StringRequest(Request.Method.DELETE, mUrlAPIBilheteCheckin + bilhete.getId(), new Response.Listener<String>() {
+
+			@Override
+			public void onResponse(String response) {
+				if (bilheteListener != null) bilheteListener.onCheckinBilhete();
+			}
+		}, new Response.ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Toast.makeText(applicationContext, error.getMessage(), Toast.LENGTH_SHORT).show();
+			}
+		});
+		volleyQueue.add(request);
+	}
 }

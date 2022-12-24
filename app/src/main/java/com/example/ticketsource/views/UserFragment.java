@@ -27,7 +27,7 @@ public class UserFragment extends Fragment implements UserListener {
 
     private EditText etUsername, etEmail, etPassword;
     private FragmentManager fragmentManager;
-    private User utilizador;
+    private User user;
 
     private Pattern pattern;
     private Matcher matcher;
@@ -48,6 +48,11 @@ public class UserFragment extends Fragment implements UserListener {
 
     @Override
     public void onValidateLogin(String token, String username) {
+
+    }
+
+    @Override
+    public void onCheckRole(Boolean isCliente) {
 
     }
 

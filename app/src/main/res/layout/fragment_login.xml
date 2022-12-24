@@ -81,7 +81,7 @@
             <Button
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:id="@+id/btnLogin"
-                app:backgroundTint="@android:color/holo_green_light"
+                app:backgroundTint="@color/green_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -119,7 +119,7 @@
                 <Button
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/btnSignup"
-                    android:textColor="@android:color/holo_green_light"
+                    android:textColor="@color/green_medium"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

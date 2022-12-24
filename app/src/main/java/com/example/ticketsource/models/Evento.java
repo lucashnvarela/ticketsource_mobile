@@ -1,103 +1,55 @@
 package com.example.ticketsource.models;
 
 public class Evento {
-    private int codigo_produto, quantidade, id_modelo;
-    private float preco;
-    private String nome, genero, descricao, tamanho, data, foto;
-    //o atributo autoIncrementedId é static: comum a todas as instâncias/objetos da classe
-    //private static int autoIncrementedId = 1;
+	private int id;
+	private String titulo, descricao, categoria, nomepic;
 
-    public Evento(int codigo_produto, String nome, String genero, String descricao, String tamanho, float preco, int quantidade, String data, int id_modelo, String foto) {
+	public Evento(int id, String titulo, String descricao, String categoria, String nomepic) {
 
-        this.codigo_produto = codigo_produto;
-        this.nome = nome;
-        this.genero = genero;
-        this.descricao = descricao;
-        this.tamanho = tamanho;
-        this.preco = preco;
-        this.quantidade = quantidade;
-        this.data = data;
-        this.id_modelo = id_modelo;
-        this.foto = foto;
-    }
+		this.id = id;
+		this.titulo = titulo;
+		this.descricao = descricao;
+		this.categoria = categoria;
+		this.nomepic = nomepic;
+	}
 
-    public int getCodigo_produto() {
-        return codigo_produto;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setCodigo_produto(int codigo_produto) {
-        this.codigo_produto = codigo_produto;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public int getQuantidade() {
-        return quantidade;
-    }
+	public String getTitulo() {
+		return titulo;
+	}
 
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
-    }
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
 
-    public int getId_modelo() {
-        return id_modelo;
-    }
+	public String getDescricao() {
+		return descricao;
+	}
 
-    public void setId_modelo(int id_modelo) {
-        this.id_modelo = id_modelo;
-    }
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
 
-    public float getPreco() {
-        return preco;
-    }
+	public String getCategoria() {
+		return categoria;
+	}
 
-    public void setPreco(float preco) {
-        this.preco = preco;
-    }
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
+	}
 
-    public String getNome() {
-        return nome;
-    }
+	public String getNomepic() {
+		return nomepic;
+	}
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getGenero() {
-        return genero;
-    }
-
-    public void setGenero(String genero) {
-        this.genero = genero;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getTamanho() {
-        return tamanho;
-    }
-
-    public void setTamanho(String tamanho) {
-        this.tamanho = tamanho;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public String getFoto() {
-        return foto;
-    }
-
-    public void setFoto(String foto) {
-        this.foto = foto;
-    }
+	public void setNomepic(String nome_pic) {
+		this.nomepic = nomepic;
+	}
 }

@@ -21,6 +21,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="15dp"
             android:layout_margin="10dp"
             android:orientation="vertical">
 
@@ -30,36 +31,21 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tvLabelEvento"
+                    android:id="@+id/tvLabelTitulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/itemEvento_tvLabelEvento"
+                    android:text="@string/itemEvento_tvLabelTitulo"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tvEvento"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
 
                 <TextView
-                    android:id="@+id/tvLabelLocalizacao"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/itemEvento_tvLabelLocalizacao"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvLocalizacao"
+                    android:id="@+id/tvTitulo"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
+
             </LinearLayout>
 
             <LinearLayout
@@ -69,14 +55,18 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tvLabelTipo"
+                    android:id="@+id/tvLabelCategoria"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/itemEvento_tvLabelTipo"
+                    android:text="@string/itemEvento_tvLabelCategoria"
                     android:textStyle="bold" />
 
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
                 <TextView
-                    android:id="@+id/tvTipo"
+                    android:id="@+id/tvCategoria"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
